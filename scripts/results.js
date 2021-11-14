@@ -1,7 +1,24 @@
 //list of all countries in the Travelbreifing database
+/*
 const countryList = [
     "Afghanistan","Aland Islands","Albania","Algeria","American Samoa","Andorra","Angola","Anguilla","Antigua and Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Azores","Bahamas","Bahrain","Balearic Islands","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bonaire","Bosnia and Herzegovina","Botswana","Bouvet Island","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Canary Islands","Cape Verde","Cayman Islands","Central African Republic","Chad","Chile","China","Christmas Island","Cocos Islands","Colombia","Comoros","Congo-Brazzaville","Congo-Kinshasa","Cook Islands","Costa Rica","Croatia","Cuba","Curacao","Cyprus","Czech","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Guiana","French Polynesia","French Southern Territories","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guadaloupe","Guam","Guatemala","Guernsey","Guinea","Guinea-Bissau","Guyana","Haiti","Heard Island and McDonald Islands","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Ivory Coast","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macao","Macedonia","Madagascar","Madeira","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Martinique","Mauritania","Mauritius","Mayotte","Mexico","Micronesia","Moldava","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Nagorno-Karabakh","Namibia","Nauru","Nepal","Netherlands","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Niue","Norfolk Island","North Korea","Northern Cyprus","Northern Mariana Islands","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Pitcairn","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saba","Saint Barthelemy","Saint Eustatius","Saint Helena","Saint Kitts and Nevis","Saint Lucia","Saint Martin-Dutch","Saint Martin-French","Saint Pierre and Miquelon","Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","Somaliland","South Africa","South Georgia and the South Sandwich Islands","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Svalbard and Jan Mayen","Swaziland","Sweden","Switzerland","Syria","Tahiti","Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tokelau","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Turks and Caicos Islands","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Virgin Islands-British","Virgin Islands-US","Wallis and Futuna","Yemen","Zambia","Zimbabwe"
 ];
+*/
+
+const countryList = [];
+fetch("https://travelbriefing.org/countries.json")
+    .then(response => {
+        return response.json();
+    })
+    .then(data => {
+        data.forEach((element) => {
+            countryList.push(element["name"]);
+        })
+        console.log(countryList);
+    })
+    .catch(error => {
+        alert(error);
+    })
 
 const countryInput = document.querySelectorAll(".country-input");
 const autocomBox = document.querySelectorAll(".autocom-box");
@@ -81,7 +98,7 @@ const electricity_element = document.querySelector("#electricity .component-body
 const telephone_element = document.querySelector("#telephone .component-body")
 
 let url = `https://travelbriefing.org/${localStorage.getItem("toCountry").replace(/ /g,"_")}?format=json`;
-let countryFlag, countryName, neighbouringCountries, travelRecommendations, languages, /*timezone,*/ /*visa,*/ /*currency, currencyList*/ health, electricity;
+let countryFlagURL, countryName, neighbouringCountries, travelRecommendations, languages, /*timezone,*/ /*visa,*/ /*currency, currencyList*/ health, electricity;
 
 //variables for Chart.js
 let labels,tMin=[], tMax=[], tAvg=[], pMin=[], pMax=[], pAvg=[];
@@ -91,7 +108,6 @@ fetch(url)
         return response.json();
     })
     .then(data => {
-        console.log(data);
         countryFlagURL = `https://flagcdn.com/w320/${data["names"]["iso2"].toLowerCase()}.png`;
         countryName = data["names"]["full"];
         
@@ -182,7 +198,7 @@ fetch(url)
         });
     })
     .catch(error => {
-        alert("Error");
+        alert(error);
     })
 
 function updateUI() {
@@ -331,6 +347,3 @@ function updateChart(labels,tMin,tMax,tAvg,pMin,pMax,pAvg) {
         }
     });
 }
-
-//when a country link is clicked, add it to local storage
-document.querySelector(".country-caption .section-paragraph a").innerHTML = "cool";
