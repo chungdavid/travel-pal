@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelPal | Home</title>
+
+    <!--stylesheets-->
+    <link rel="stylesheet" href="styles/style.css">
+    <script src="https://kit.fontawesome.com/91fc53e667.js" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+    <section class="section showcase">
+        <nav>
+            <h1 class="text-logo">Travel<span>Pal</span></h1>
+            <ul>
+                <li><a class="nav-link" href="index.html">Home</a></li>
+                <li><a class="nav-link" href="">GitHub</a></li>
+            </ul>
+        </nav>
+        <div class="container">
+            <img class="showcase-logo" src="assets/images/logo2.svg" alt="Logo">
+            <h1 class="showcase-text">I am travelling...</h1>
+            
+            <form id="country-search" action="results.html" onsubmit="getFormData()">
+                <div class="from-search-box">
+                    <label class="country-form-label" for="from-country"><i class="far fa-circle"></i></label>
+                    <input class="country-input" type="text" id="from-country" placeholder="From..." required>
+                    <div class="autocom-box hide">
+                        <ul class="suggestions"></ul>
+                    </div>
+                </div>
+                <div class="to-search-box">
+                    <label class="country-form-label" for="to-country"><i class="fas fa-map-marker-alt"></i></label>
+                    <input class="country-input" type="text" id="to-country" placeholder="To..." required>
+                    <div class="autocom-box hide">
+                        <ul class="suggestions"></ul>
+                    </div>
+                </div>
+                <button class="submit-btn" type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+    </section>
+
+    <section class="section general-section">
+        <div class="container">
+            <h2 class="section-heading">Welcome to TravelPal!</h2>
+            <p class="section-paragraph">
+                Are you looking to travel anytime soon? Input the country you're travelling from, and the country you plan on travelling to, and we will give you all the information you need to know for your trip:
+            </p>
+            <ul class="paragraph-list">
+                <li>Travel Recommendations</li>
+                <li>Language</li>
+                <!--<li>Timezone</li>-->
+                <!--<li>Visa Requirements</li>-->
+                <!--<li>Currency</li>-->
+                <li>Health & Vaccines</li>
+                <li>Drinking Water</li>
+                <li>Weather</li>
+                <li>Telephone</li>
+                <li>Electric Sockets</li>
+            </ul>
+            <p class="section-paragraph">
+                This site was built using the <a class="paragraph-bold paragraph-link" href="">Travelbriefing.org</a> public API.
+            </p>
+        </div>
+    </section>
+
+    <footer class="section">
+        <span>Built by David Chung | View source code on <a class="paragraph-bold paragraph-link" href="">GitHub</a>.</span>
+    </footer>
+
+    <!--scripts-->
+    <script src="scripts/home.js"></script>
+    
+</body>
+</html>

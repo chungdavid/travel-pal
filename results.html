@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelPal | Search</title>
+
+    <!--stylesheets-->
+    <link rel="stylesheet" href="styles/style.css">
+    <script src="https://kit.fontawesome.com/91fc53e667.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.1.0/chart.min.js"></script>
+
+</head>
+
+<body>
+
+    <header class="section header">
+        <nav>
+            <h1 class="text-logo">Travel<span>Pal</span></h1>
+            <ul>
+                <li><a class="nav-link" href="index.html">Home</a></li>
+                <li><a class="nav-link" href="">GitHub</a></li>
+            </ul>
+        </nav>
+        <div class="container">
+            <h1 class="header-text"></h1>
+            <form id="country-search" action="" onsubmit="getFormData()">
+                <div class="from-search-box">
+                    <label class="country-form-label" for="from-country"><i class="far fa-circle"></i></label>
+                    <input class="country-input" type="text" id="from-country" placeholder="From..." required>
+                    <div class="autocom-box hide">
+                        <ul class="suggestions"></ul>
+                    </div>
+                </div>
+                <div class="to-search-box">
+                    <label class="country-form-label" for="to-country"><i class="fas fa-map-marker-alt"></i></label>
+                    <input class="country-input" type="text" id="to-country" placeholder="To..." required>
+                    <div class="autocom-box hide">
+                        <ul class="suggestions"></ul>
+                    </div>
+                </div>
+                <button class="submit-btn" type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+    </header>
+
+    <section class="section general-section">
+        <div class="results-container">
+            <div class="results-sidebar">
+                <h4>Table of contents</h4>
+                <ul>
+                    <li><a href="#travel-recommendations">Travel Recommendations</a></li>
+                    <li><a href="#languages">Language</a></li>
+                    <!--<li><a href="#timezone">Timezone</a></li>-->
+                    <!--<li><a href="#visa">Visa Requirements</a></li>-->
+                    <!--<li><a href="#currency">Currency</a></li>-->
+                    <li><a href="#health">Health & Vaccines</a></li>
+                    <li><a href="#water">Drinking Water</a></li>
+                    <li><a href="#weather">Weather</a></li>
+                    <li><a href="#telephone">Telephone</a></li>
+                    <li><a href="#electricity">Electricity</a></li>
+                </ul>
+
+            </div>
+            <div class="results-body">
+                <div class="country-info">
+                    <img alt="Country Flag" class="country-flag">
+                    <div class="country-caption">
+                        <h3></h3>
+                        <p class="section-paragraph"></p>
+                    </div>
+                </div>
+
+                <div id="travel-recommendations"class="info-component">
+                    <div class="component-title">
+                        <h4><i class="fas fa-thumbs-up"></i>Travel Recommendations</h4>
+                    </div>
+                    <div class="component-body">
+                    </div>
+                </div>
+                
+                <div id="languages" class="info-component">
+                    <div class="component-title">
+                        <h4><i class="fas fa-language"></i>Language</h4>
+                    </div>
+                    <div class="component-body"></div>
+                </div>
+                <!--
+                <div id="timezone" class="info-component">
+                    <div class="component-title">
+                        <h4><i class="fas fa-clock"></i>Timezone</h4>
+                    </div>
+                    <div class="component-body"></div>
+                </div>-->
+                <!--
+                <div id="visa" class="info-component">
+                    <div class="component-title">
+                        <h4><i class="fas fa-file"></i>Visa Requirements</h4>
+                    </div>
+                    <div class="component-body"></div>
+                </div>-->
+                <!--
+                <div id="currency" class="info-component">
+                    <div class="component-title">
+                        <h4><i class="fas fa-money-bill"></i>Currency</h4>
+                    </div>
+                    <div class="component-body">
+                        <form id="currency-form" action="">
+                                <label class="currency-form-label" for="currency-before">Dong</label>
+                                <input class="currency-input" type="text" id="currency-before" value="1">
+                            
+                                <select class="currency-select">
+                                    <option>Canadian Dollar</option>
+                                </select>
+                                <input class="currency-input" type="text" id="currency-after" value="1.5" required>
+                        </form>
+                    </div>
+                </div>-->
+                <div id="health" class="info-component">
+                    <div class="component-title">
+                        <h4><i class="fas fa-syringe"></i>Health & Vaccines</h4>
+                    </div>
+                    <div class="component-body"></div>
+                </div>
+
+                <div id="water" class="info-component">
+                    <div class="component-title">
+                        <h4><i class="fas fa-tint"></i>Drinking Water</h4>
+                    </div>
+                    <div class="component-body"></div>
+                </div>
+
+                <div id="weather" class="info-component">
+                    <div class="component-title">
+                        <h4><i class="fas fa-cloud"></i>Weather</h4>
+                    </div>
+                    <div class="component-body">
+                        <canvas id="temp-chart"></canvas>
+                        <canvas id="precip-chart"></canvas>
+                    </div>
+                </div>
+
+                <div id="telephone" class="info-component">
+                    <div class="component-title">
+                        <h4><i class="fas fa-phone"></i>Telephone</h4>
+                    </div>
+                    <div class="component-body"></div>
+                </div>
+
+                <div id="electricity" class="info-component">
+                    <div class="component-title">
+                        <h4><i class="fas fa-bolt"></i>Electricity</h4>
+                    </div>
+                    <div class="component-body"></div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <span>Built by David Chung | View source code on <a class="paragraph-bold paragraph-link" href="">GitHub</a>.</span>
+    </footer>
+    
+    <!--scripts-->
+    <script src="scripts/results.js"></script>
+    
+</body>
+</html>
