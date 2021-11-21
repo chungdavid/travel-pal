@@ -1,4 +1,5 @@
 # ✈️ TravelPal
+View the project [here](https://travel-pal.netlify.app).
 
 ### ℹ️ About
 TravelPal is a website for travelers! Input the country you're travelling to and it'll provide you with practical information you'll need for your trip! 
