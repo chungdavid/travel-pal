@@ -5,6 +5,7 @@ const countryList = [
 ];
 */
 
+//obtain list of all countries in the Travelbreifing database
 const countryList = [];
 fetch("https://travelbriefing.org/countries.json")
     .then(response => {
@@ -20,10 +21,12 @@ fetch("https://travelbriefing.org/countries.json")
         alert(error);
     })
 
+//HTML elements for country search
 const countryInput = document.querySelectorAll(".country-input");
 const autocomBox = document.querySelectorAll(".autocom-box");
 const suggestions = document.querySelectorAll(".suggestions");
 
+//function that displays the country search suggestions when given a list of suggestions
 function showSuggestions(list, index) {
     if(list.length > 4) {
         for(i=0; i<4; i++) {
@@ -38,12 +41,13 @@ function showSuggestions(list, index) {
 }
 
 countryInput.forEach(function(countryInput, currentIndex) {
+    //call the following function whenever there is an input to either of the two country input fields
     countryInput.addEventListener("input", function() {
         let input = countryInput.value.toUpperCase();
         let suggestionList = [];
         suggestions[currentIndex].innerHTML = "";
 
-        //creat list of suggestions
+        //create list of suggestions
         countryList.forEach(country => {
             if(country.toUpperCase().startsWith(input) && input.length != 0) {
                 suggestionList.push(`<li class="suggestion"><span><i class="fas fa-globe-americas autocom-icon"></i></span>${country}</li>`);
@@ -114,14 +118,14 @@ fetch(url)
         //neighbouring countries
         neighboringCountries = data["neighbors"].map((item, index) => {
             if(index == data["neighbors"].length - 1 && data["neighbors"].length > 1) {
-                return `and <a class="paragraph-bold" href="">${item["name"]}</a>`;
+                return `and <a class="paragraph-bold" href="">${item["name"]}.</a>`;
             } else {
                 return `<a class="paragraph-bold" href="">${item["name"]}</a>`;
             }
         }).join(", ");
 
         //travel recommendations
-        travelRecommendations = ``;
+        travelRecommendations=``;
         Object.keys(data["advise"]).forEach(source => {            
             travelRecommendations += `<p><span class="paragraph-bold">${data["advise"][source]["advise"]}</span><span class="subtext">${source} - <a class="paragraph-link" href=${data["advise"][source]["url"]}>Full Report</a></span></p>`;
         });
@@ -157,8 +161,8 @@ fetch(url)
         */
 
         //weather info
-        labels = Object.keys(data["weather"]);
-        labels.forEach(label => {
+        labels = Object.keys(data["weather"]); //get an array of months
+        labels.forEach(label => { //obtain weather data for each month
             tMin.push(data["weather"][label]["tMin"]);
             tMax.push(data["weather"][label]["tMax"]);
             tAvg.push(data["weather"][label]["tAvg"]);
@@ -204,9 +208,9 @@ fetch(url)
 function updateUI() {
     header_text_element.innerHTML = `Travel infomation for: ${localStorage.getItem("fromCountry")} to ${localStorage.getItem("toCountry")}`
     country_flag_element.src = countryFlagURL;
-    country_name_element.innerHTML = `${countryName}`;
+    country_name_element.innerHTML = countryName;
     neighboring_countries_element.innerHTML = `Other countries in the neighborhood of ${localStorage.getItem("toCountry")} are ${neighboringCountries}`;
-    travel_recommendations_element.innerHTML = `${travelRecommendations}`;
+    travel_recommendations_element.innerHTML = travelRecommendations;
     languages_element.innerHTML = `The languages spoken in ${localStorage.getItem("toCountry")} are ${languages}`;
     //timezone_element.innerHTML = timezone;
     //currency_element.innerHTML = currency;
