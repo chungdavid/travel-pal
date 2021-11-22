@@ -29,14 +29,14 @@
             <form id="country-search" action="results.html" onsubmit="getFormData()">
                 <div class="from-search-box">
                     <label class="country-form-label" for="from-country"><i class="far fa-circle"></i></label>
-                    <input class="country-input" type="text" id="from-country" placeholder="From..." required>
+                    <input class="country-input" type="text" id="from-country" pattern="[A-Za-z\s]+" placeholder="From..." required>
                     <div class="autocom-box hide">
                         <ul class="suggestions"></ul>
                     </div>
                 </div>
                 <div class="to-search-box">
                     <label class="country-form-label" for="to-country"><i class="fas fa-map-marker-alt"></i></label>
-                    <input class="country-input" type="text" id="to-country" placeholder="To..." required>
+                    <input class="country-input" type="text" id="to-country" pattern="[A-Za-z\s]+" placeholder="To..." required>
                     <div class="autocom-box hide">
                         <ul class="suggestions"></ul>
                     </div>
