@@ -15,7 +15,6 @@ fetch("https://travelbriefing.org/countries.json")
         data.forEach((element) => {
             countryList.push(element["name"]);
         })
-        console.log(countryList);
     })
     .catch(error => {
         alert(error);
@@ -102,8 +101,8 @@ const electricity_element = document.querySelector("#electricity .component-body
 const telephone_element = document.querySelector("#telephone .component-body")
 
 let url = `https://travelbriefing.org/${localStorage.getItem("toCountry").replace(/ /g,"_")}?format=json`;
-let countryFlagURL, countryName, neighbouringCountries, travelRecommendations, languages, /*timezone,*/ /*visa,*/ /*currency, currencyList*/ health, electricity;
-
+let headerText, countryFlagURL, countryName, neighbouringCountries, travelRecommendations, languages, /*timezone,*/ /*visa,*/ /*currency, currencyList*/ health, electricity;
+let valid; //this variable is a flag variable that tells us if the country the user searched for is valid
 //variables for Chart.js
 let labels,tMin=[], tMax=[], tAvg=[], pMin=[], pMax=[], pAvg=[];
 
@@ -112,106 +111,134 @@ fetch(url)
         return response.json();
     })
     .then(data => {
-        countryFlagURL = `https://flagcdn.com/w320/${data["names"]["iso2"].toLowerCase()}.png`;
-        countryName = data["names"]["full"];
-        
-        //neighbouring countries
-        neighboringCountries = data["neighbors"].map((item, index) => {
-            if(index == data["neighbors"].length - 1 && data["neighbors"].length > 1) {
-                return `and <a class="paragraph-bold" href="">${item["name"]}.</a>`;
-            } else {
-                return `<a class="paragraph-bold" href="">${item["name"]}</a>`;
-            }
-        }).join(", ");
-
-        //travel recommendations
-        travelRecommendations=``;
-        Object.keys(data["advise"]).forEach(source => {            
-            travelRecommendations += `<p><span class="paragraph-bold">${data["advise"][source]["advise"]}</span><span class="subtext">${source} - <a class="paragraph-link" href=${data["advise"][source]["url"]}>Full Report</a></span></p>`;
-        });
-
-        //languages
-        languages = data["language"].map((item, index) => {
-            if(index == data["language"].length - 1 && data["language"].length > 1){
-                return `and ${item["language"]}`;
-            } else {
-                return item["language"];
-            }
-        }).join(", ");
-        
-        /*
-        //timezone
-        timezone = data["timezone"]["name"];
-        */
-
-        //visaRequirements = data[]
-
-        //water
-        water = data["water"]["short"];
-
-        //currency
-        //currency = `The currency in ${data["names"]["name"]} is <span class="paragraph-bold">${data["currency"]["name"]} (${data["currency"]["code"]})</span>`;
-        
-        /*
-        //obtain a list of all the currency
-        currencyList = ``;
-        for(i=0;i<data["currency"]["compare"].length;i++){
-            currencyList += `<option rate="${data["currency"]["compare"][i]["rate"]}">${data["currency"]["compare"][i]["name"]}</option>`;
-        }
-        */
-
-        //weather info
-        labels = Object.keys(data["weather"]); //get an array of months
-        labels.forEach(label => { //obtain weather data for each month
-            tMin.push(data["weather"][label]["tMin"]);
-            tMax.push(data["weather"][label]["tMax"]);
-            tAvg.push(data["weather"][label]["tAvg"]);
-            pMin.push(data["weather"][label]["pMin"]);
-            pMax.push(data["weather"][label]["pMax"]);
-            pAvg.push(data["weather"][label]["pAvg"]);
-        });
-
-        //health info
-        if(data["vaccinations"].length < 1){
-            health = `N/A`;
+        console.log(data);
+        //data for Netherlands is displayed if the country input is invalid. Instead, we want to display nothing
+        //if the user intentionally searched for Netherlands and data for Netherlands was fetched, then country input must be a member of this array
+        let validSearches = [data["names"]["name"],data["names"]["full"],data["names"]["iso2"],data["names"]["iso3"]];
+        //to check if the input is invalid, check if data for Netherlands is displayed when country input is NOT Netherlands
+        if(data["names"]["name"]=="Netherlands" && !validSearches.includes(localStorage.getItem("toCountry"))){
+            //this is an invlaid country input
+            headerText = `No results for: ${localStorage.getItem("fromCountry")} to ${localStorage.getItem("toCountry")}`;
+            valid=false;
         } else{
-            health = data["vaccinations"].map(item => {
-                return `<p><span class="paragraph-bold">${item["name"]}</span><span class="subtext">${item["message"]}</span></p>`
-            }).join(""); 
-        }   
+            headerText = `Travel infomation for: ${localStorage.getItem("fromCountry")} to ${localStorage.getItem("toCountry")}`;
+            valid=true;
 
-        //telephone
-        telephone = Object.keys(data["telephone"]).map(item => {
-            if(item == "calling_code") {
-                return `<div class="phone-codes">Country Code: ${data["telephone"][item]}</div>`
-            };
-            return `<div class="phone-codes"><img src="/assets/images/${item}.svg">${data["telephone"][item]}</div>`
-        }).join("");
-
-        //electricity
-        electricity = `<p><span class="paragraph-bold">Frequency:</span> ${data["electricity"]["frequency"]} Hz</p><p><span class="paragraph-bold">Voltage:</span> ${data["electricity"]["voltage"]} Volt</p><p><span class="paragraph-bold">Plugs:</span> ${data["electricity"]["plugs"].map(item => {return `Type ${item}`}).join(", ")}</p>`
+            if(data["names"]["iso2"]!=null){
+                countryFlagURL = `https://flagcdn.com/w320/${data["names"]["iso2"].toLowerCase()}.png`;
+            } else{
+                countryFlagURL = "assets/images/unknown_flag.png";
+            }
+            
+            countryName = data["names"]["full"];
+            
+            //neighbouring countries
+            neighboringCountries = `Other countries in the neighborhood of ${data["names"]["name"]} are `+data["neighbors"].map((item, index) => {
+                if(index == data["neighbors"].length - 1 && data["neighbors"].length > 1) {
+                    return `and <a class="paragraph-bold" href="">${item["name"]}.</a>`;
+                } else {
+                    return `<a class="paragraph-bold" href="">${item["name"]}</a>`;
+                }
+            }).join(", ");
+    
+            //travel recommendations
+            travelRecommendations=``;
+            Object.keys(data["advise"]).forEach(source => {            
+                travelRecommendations += `<p><span class="paragraph-bold">${data["advise"][source]["advise"]}</span><span class="subtext">${source} - <a class="paragraph-link" href=${data["advise"][source]["url"]}>Full Report</a></span></p>`;
+            });
+    
+            //languages
+            languages = `The languages spoken in ${data["names"]["name"]} are `+data["language"].map((item, index) => {
+                if(index == data["language"].length - 1 && data["language"].length > 1){
+                    return `and ${item["language"]}`;
+                } else {
+                    return item["language"];
+                }
+            }).join(", ");
+            
+            /*
+            //timezone
+            timezone = data["timezone"]["name"];
+            */
+    
+            //visaRequirements = data[]
+    
+            //water
+            water = data["water"]["short"];
+    
+            //currency
+            //currency = `The currency in ${data["names"]["name"]} is <span class="paragraph-bold">${data["currency"]["name"]} (${data["currency"]["code"]})</span>`;
+            
+            /*
+            //obtain a list of all the currency
+            currencyList = ``;
+            for(i=0;i<data["currency"]["compare"].length;i++){
+                currencyList += `<option rate="${data["currency"]["compare"][i]["rate"]}">${data["currency"]["compare"][i]["name"]}</option>`;
+            }
+            */
+    
+            //weather info
+            labels = Object.keys(data["weather"]); //get an array of months
+            labels.forEach(label => { //obtain weather data for each month
+                tMin.push(data["weather"][label]["tMin"]);
+                tMax.push(data["weather"][label]["tMax"]);
+                tAvg.push(data["weather"][label]["tAvg"]);
+                pMin.push(data["weather"][label]["pMin"]);
+                pMax.push(data["weather"][label]["pMax"]);
+                pAvg.push(data["weather"][label]["pAvg"]);
+            });
+    
+            //health info
+            if(data["vaccinations"].length < 1){
+                health = `N/A`;
+            } else{
+                health = data["vaccinations"].map(item => {
+                    return `<p><span class="paragraph-bold">${item["name"]}</span><span class="subtext">${item["message"]}</span></p>`
+                }).join(""); 
+            }   
+    
+            //telephone
+            telephone = Object.keys(data["telephone"]).map(item => {
+                if(item == "calling_code") {
+                    return `<div class="phone-codes">Country Code: ${data["telephone"][item]}</div>`
+                };
+                return `<div class="phone-codes"><img src="/assets/images/${item}.svg">${data["telephone"][item]}</div>`
+            }).join("");
+    
+            //electricity
+            electricity = `<p><span class="paragraph-bold">Frequency:</span> ${data["electricity"]["frequency"]} Hz</p><p><span class="paragraph-bold">Voltage:</span> ${data["electricity"]["voltage"]} Volt</p><p><span class="paragraph-bold">Plugs:</span> ${data["electricity"]["plugs"].map(item => {return `Type ${item}`}).join(", ")}</p>`;
+        
+        }
 
     })
     .then( ()=> {
-        updateUI();
-        //update local storage when one of the neighbouring countries is clicked on
-        document.querySelectorAll(".country-caption .section-paragraph a").forEach(item => {
-            item.addEventListener("click", function(){
-                localStorage.setItem("toCountry", item.innerHTML);
+
+        header_text_element.innerHTML = headerText;
+        if(valid==true){
+            updateUI();
+            
+            //update local storage when one of the neighbouring countries is clicked on
+            document.querySelectorAll(".country-caption .section-paragraph a").forEach(item => {
+                item.addEventListener("click", function(){
+                    localStorage.setItem("toCountry", item.innerHTML);
+                });
             });
-        });
+
+        } else{
+            document.querySelector(".section.general-section").innerHTML = "The country you searched for does not exist, try again.";
+        }
+
     })
     .catch(error => {
         alert(error);
     })
 
 function updateUI() {
-    header_text_element.innerHTML = `Travel infomation for: ${localStorage.getItem("fromCountry")} to ${localStorage.getItem("toCountry")}`
     country_flag_element.src = countryFlagURL;
     country_name_element.innerHTML = countryName;
-    neighboring_countries_element.innerHTML = `Other countries in the neighborhood of ${localStorage.getItem("toCountry")} are ${neighboringCountries}`;
+    neighboring_countries_element.innerHTML = neighboringCountries;
     travel_recommendations_element.innerHTML = travelRecommendations;
-    languages_element.innerHTML = `The languages spoken in ${localStorage.getItem("toCountry")} are ${languages}`;
+    languages_element.innerHTML = languages;
     //timezone_element.innerHTML = timezone;
     //currency_element.innerHTML = currency;
     //document.querySelector(".currency-select").innerHTML = currencyList;
